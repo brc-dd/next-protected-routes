@@ -2,14 +2,17 @@ import Tokens from 'csrf';
 
 const tokens = new Tokens();
 
-let secret, csrfToken;
-const checkToken = ({ headers }) => tokens.verify(secret, headers['xsrf-token']);
+let secret, csrfToken, oldSecret;
+const checkToken = ({ headers }) =>
+  tokens.verify(secret, headers['xsrf-token']) ||
+  (oldSecret && tokens.verify(oldSecret, headers['xsrf-token']));
 
 const refreshToken = () => {
+  oldSecret = secret;
   secret = tokens.secretSync();
   csrfToken = tokens.create(secret);
 
-  setTimeout(refreshToken, 3 * 60 * 60 * 1000); // every 3 hr
+  setTimeout(refreshToken, 1.5 * 60 * 60 * 1000); // each token is valid for 3 hrs
 };
 refreshToken();
 

@@ -11,6 +11,8 @@ const Home = ({ csrfToken }) => {
       .then((data) => setUser(data.name));
 
     return () => {};
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return <div>Hello {user}!</div>;
