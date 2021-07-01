@@ -1,17 +1,17 @@
 import { useState, useEffect } from 'react';
 
-import { csrfToken } from '../utils/csrfLib';
+import { accessToken } from '../utils/protector';
 
-const Home = ({ csrfToken }) => {
+const Home = ({ accessToken }) => {
   const [user, setUser] = useState('Guest');
 
   useEffect(() => {
-    fetch('/api/user', { headers: { 'xsrf-token': csrfToken } })
+    // this will be called from the client
+    fetch('/api/user', { headers: { 'x-access-token': accessToken } })
       .then((response) => response.json())
       .then((data) => setUser(data.name));
 
     return () => {};
-
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -19,7 +19,7 @@ const Home = ({ csrfToken }) => {
 };
 
 const getServerSideProps = async () => {
-  return { props: { csrfToken } };
+  return { props: { accessToken } };
 };
 
 export default Home;
